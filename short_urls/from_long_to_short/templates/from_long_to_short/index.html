@@ -1,6 +1,7 @@
 {% extends 'from_long_to_short/base.html' %}
+{% load from_long_to_short_tags %}
 
-{% block urlform %}
+{% block content %}
 
 <h1>Make your link shorter!</h1>
 
@@ -15,5 +16,5 @@
 
     <button type="submit">Give me short URL!</button>
 </form>
+{% show_shorts %}
 {% endblock %}
-
