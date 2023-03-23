@@ -48,14 +48,6 @@ div.article-panel {
     overflow: hidden;
     color: #555;
 }
-div.article-panel p.first {
-    margin: 0;
-    float: left;
-}
-div.article-panel p.last {
-    margin: 0;
-    float: right;
-}
 
 ul.list-articles {
 	list-style: none;
