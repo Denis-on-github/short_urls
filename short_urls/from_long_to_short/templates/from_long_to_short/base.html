@@ -1,15 +1,21 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html>
-
 <head>
+	<title>{{ title }}</title>
 	<link type="text/css" href="{% static 'from_long_to_short/css/styles.css' %}" rel="stylesheet"/>
-	<title>{{ title }} </title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="{% static 'from_long_to_short/images/logo.ico' %}" type="image/x-icon"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
+<table class="table-page" border=0 cellpadding="0" cellspacing="0">
+<tr><td valign=top>
 {% block mainmenu %}
+	<div class="header">
+		<ul id="mainmenu" class="mainmenu">
+			<li class="logo"><a href="{% url 'home' %}"><div class="logo"></div></a></li>
 <ul>
 	{% for m in menu %}
 		{% if not forloop.last %}
@@ -20,12 +26,44 @@
 	{% endfor %}
 </ul>
 {% endblock mainmenu %}
-
+	<div class="content-text"
 {% block content %}
 {% endblock %}
 
 {% block content_2 %}
 {% endblock %}
 
+{% if page_obj.has_other_pages %}
+<nav class="list_pages">
+	<ul>
+		{% if page_obj.has_previous %}
+		<li class="page-num">
+			<a href="?page={{ page_obj.first }}">&lt;&lt;</a>
+		</li>
+		<li class="page-num">
+			<a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+		</li>
+		{% endif %}
+		{% for p in paginator.page_range %}
+		{% if page_obj.number == p %}
+		<li class="page-num page-num-selected">{{ p }}</li>
+		{% elif p >= page_obj.number|add:-1 and p <= page_obj.number|add:1 %}
+		<li class="page-num">
+			<a href="?page={{ p }}">{{ p }}</a>
+		</li>
+		{% endif %}
+		{% endfor %}
+		{% if page_obj.has_next %}
+		<li class="page-num">
+			<a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+		</li>
+		<li class="page-num">
+			<a href="?page={{ page_obj.last }}">&gt;&gt;</a>
+		</li>
+		{% endif %}
+	</ul>
+</nav>
+{% endif %}
+	</div>
 </body>
 </html>

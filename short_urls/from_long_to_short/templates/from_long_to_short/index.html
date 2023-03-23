@@ -1,5 +1,4 @@
 {% extends 'from_long_to_short/base.html' %}
-{% load from_long_to_short_tags %}
 
 {% block content %}
 
@@ -16,5 +15,20 @@
 
     <button type="submit">Give me short URL!</button>
 </form>
-{% show_shorts %}
+{% endblock %}
+
+{% block content_2 %}
+
+<h1>Your's shorts</h1>
+<ul>
+    {% for as in all_shorts %}
+    <li>
+        <h2>{{ as.full_url }}</h2>
+        <p>Short link: {{ as.short_url }}</p>
+        <p>You use it: {{ as.request_count }} times</p>
+        <p>We created it for you at: {{ as.created_date }}</p>
+        <hr>
+    </li>
+    {% endfor %}
+</ul>
 {% endblock %}
