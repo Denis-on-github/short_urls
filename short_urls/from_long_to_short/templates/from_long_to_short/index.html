@@ -17,20 +17,3 @@
 </form>
 {% endblock %}
 
-{% block content %}
-
-<h1>{{ title }}</h1>
-<ul>
-    {% for a in all %}
-    <li>
-        <h2>{{ a.pk }}</h2>
-        <p>{{ a.full_url }}</p>
-        <p>{{ a.short_url }}</p>
-        <p>{{ a.request_count }}</p>
-        <p>{{ a.created_date }}</p>
-        <hr>
-    </li>
-    {% endfor %}
-</ul>
-
-{% endblock %}

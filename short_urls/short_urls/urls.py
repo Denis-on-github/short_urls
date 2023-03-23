@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from from_long_to_short.views import index, pageNotFound
+from from_long_to_short.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),

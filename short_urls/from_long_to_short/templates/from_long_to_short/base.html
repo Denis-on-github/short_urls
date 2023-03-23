@@ -1,4 +1,5 @@
 {% load static %}
+{% load from_long_to_short_tags %}
 <!DOCTYPE html>
 <html>
 
@@ -23,7 +24,18 @@
 {% block urlform %}
 {% endblock %}
 
-{% block content %}
-{% endblock %}
+{% get_shorts as gs %}
+<h1>{{ title }}</h1>
+<ul>
+    {% for g in gs %}
+    <li>
+        <h2>{{ g.full_url }}</h2>
+        <p>Short link: {{ g.short_url }}</p>
+        <p>You use it: {{ g.request_count }} times</p>
+        <p>We created it for you at: {{ g.created_date }}</p>
+        <hr>
+    </li>
+    {% endfor %}
+</ul>
 </body>
 </html>
