@@ -73,7 +73,7 @@ ul.list-articles li {
 }
 
 .logo {
-	background: url('../images/logo.png') no-repeat 10px 5px;
+	background: url('../images/main.png') no-repeat 10px 5px;
 	width: 70px;
 	height: 60px;
 }
@@ -382,6 +382,10 @@ ul.lang-list li a:hover {color: #fdc073;}
     min-width: 200px;
     font-size: 16px;
 }
+.list-pages {
+    list-style: none;
+    display: inline-block;
+}
 
 .list-pages {
 	text-align: center;
@@ -410,7 +414,7 @@ ul.lang-list li a:hover {color: #fdc073;}
 	border-radius: 30px;
 }
 .list-pages .page-num:hover {
-	box-shadow: 3px 3px 1px #d0d0d0; 
+	box-shadow: 3px 3px 1px #d0d0d0;
 }
 .list-pages .page-num-selected {
 	border: none;
@@ -418,5 +422,10 @@ ul.lang-list li a:hover {color: #fdc073;}
 	font-size: 20px;
 }
 .list-pages .page-num-selected:hover {
-	box-shadow: none; 
+	box-shadow: none;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
 }

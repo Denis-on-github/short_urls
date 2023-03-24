@@ -8,9 +8,9 @@ from .forms import *
 
 import random
 
-menu = [{'title': 'Homepage', 'url_name': 'home'},
-        {'title': 'Feedback', 'url_name': 'feedback'},
-        {'title': 'About me', 'url_name': 'about_me'}]
+menu = [{'title': 'About me', 'url_name': 'about_me'},
+    {'title': 'Feedback', 'url_name': 'feedback'}
+]
 
 class HomePage(CreateView, ListView):
     form_class = NewShortURLForm
