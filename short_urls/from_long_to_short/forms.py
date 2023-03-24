@@ -1,9 +1,10 @@
 from django import forms
-from django.core.exceptions import ValidationError
-
+from captcha.fields import CaptchaField
 from .models import *
 
 class NewShortURLForm(forms.ModelForm):
+    if settings.DEBUG is False:
+        captcha = CaptchaField()
     class Meta:
         model = ShortURLs
         fields = ['full_url', 'subpart']
@@ -26,4 +27,8 @@ class NewShortURLForm(forms.ModelForm):
 
 class NewFeedbackForm(forms.Form):
     name = forms.CharField(max_length=50, label='Your name')
-    comment = forms.CharField(max_length=50, label='Your feedback')
+    email = forms.EmailField(label='Your e-mail')
+    comment = forms.CharField(max_length=50,
+                              label='Your feedback',
+                              widget=forms.Textarea(attrs={'cols': 60, 'rows': 10}))
+    captcha = CaptchaField(label='Are you robot?')

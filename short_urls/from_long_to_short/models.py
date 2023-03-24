@@ -1,6 +1,7 @@
 import random
 from django.conf import settings
 from django.db import models
+from django.template.defaultfilters import truncatechars
 
 class ShortURLs(models.Model):
     full_url = models.URLField(unique=True, verbose_name='Full URL')
@@ -17,3 +18,6 @@ class ShortURLs(models.Model):
     def __str__(self):
         return self.subpart
         #return f'{self.short_url} -> {self.full_url}'
+
+    def url(self):
+        return truncatechars(self.full_url, 40)

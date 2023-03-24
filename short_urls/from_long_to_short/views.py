@@ -1,15 +1,14 @@
-from django.contrib import messages
-from django.core.paginator import Paginator
 from django.http import HttpResponseNotFound
 from django.shortcuts import render, redirect
-from django.views.generic import CreateView, FormView, ListView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, ListView, FormView
 from .models import *
 from .forms import *
 
 import random
 
 menu = [{'title': 'About me', 'url_name': 'about_me'},
-    {'title': 'Feedback', 'url_name': 'feedback'}
+        {'title': 'Feedback', 'url_name': 'feedback'}
 ]
 
 class HomePage(CreateView, ListView):
@@ -17,7 +16,7 @@ class HomePage(CreateView, ListView):
     model = ShortURLs
     template_name = 'from_long_to_short/index.html'
     context_object_name = 'all_shorts'
-    paginate_by = 1
+    paginate_by = 3
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -46,6 +45,18 @@ class HomePage(CreateView, ListView):
 def about_me(request):
     context = {'menu': menu, 'title': 'About me'}
     return render(request, 'from_long_to_short/about_me.html', context=context)
+
+class Feedback(FormView):
+    form_class = NewFeedbackForm
+    template_name = 'from_long_to_short/feedback.html'
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def form_valid(self, form):
+        return redirect('home')
 
 def feedback(request):
     if request.method == 'POST':
