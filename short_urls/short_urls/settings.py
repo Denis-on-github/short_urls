@@ -142,11 +142,24 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_TIME_LIMIT = 7 * 24 * 60 * 60 # срок хранения сессии: неделя
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'short_urls_cache')
+        'BACKEND': 'django_redis.cache.RedisCache',
+        #'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        #'LOCATION': os.path.join(BASE_DIR, 'short_urls_cache'),
+        'LOCATION': 'localhost:6379',
+        'OPTIONS': {
+            'SESSIONS': 'django_redis.client.DefaultClient'
+        }
     }
 }
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+
+SESSION_CACHE_ALIAS = 'default'
+SESSION_FILE_PATH = os.path.join(BASE_DIR, 'short_urls_sessions')
 
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'

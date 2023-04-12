@@ -1,4 +1,3 @@
-import random
 from django.conf import settings
 from django.db import models
 from django.template.defaultfilters import truncatechars
@@ -11,13 +10,13 @@ class ShortURLs(models.Model):
     created_date = models.DateTimeField(auto_now_add=True, verbose_name='Date of creation')
 
     class Meta:
-        verbose_name = 'Short URLs'
-        verbose_name_plural = 'Short URLs'
+        verbose_name = 'Short URLs' # для админки
+        verbose_name_plural = 'Short URLs' # для админки
         ordering = ('-created_date',) # сортировка по дате и времени добавления
 
     def __str__(self):
-        return self.subpart
+        return self.full_url
         #return f'{self.short_url} -> {self.full_url}'
 
     def url(self):
-        return truncatechars(self.full_url, 40)
+        return truncatechars(self.full_url, 40) # сокращаем отображение ссылки в админке
