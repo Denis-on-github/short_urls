@@ -143,7 +143,7 @@ INTERNAL_IPS = [
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_TIME_LIMIT = 7 * 24 * 60 * 60 # срок хранения сессии: неделя
+SESSION_TIME_LIMIT = 60 #7 * 24 * 60 * 60 # срок хранения сессии: неделя
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',

@@ -22,7 +22,6 @@ class NewShortURLForm(forms.ModelForm):
         if not ShortURLs.objects.filter(full_url=data).exists():
             return data
         else:
-            print('Валидатор сработал!')
             raise ValidationError(f'This URL is already short, please use it: {ShortURLs.objects.get(full_url=data).short_url}')
 
     def clean_subpart(self):

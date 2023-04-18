@@ -8,11 +8,10 @@ import redis
 import random
 
 
-
 redis_instance = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0)
 
 menu = [{'title': 'About me', 'url_name': 'about_me'},
-        {'title': 'Feedback', 'url_name': 'feedback'}
+        {'title': 'Feedback', 'url_name': 'feedback'},
 ]
 
 def get_ip(request):
@@ -23,24 +22,20 @@ def get_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
-class AddIP(CreateView):
-    def get(self, request):
-        ip_client = get_ip(request)
-        if redis_instance.exists(ip_client) == 0:
-            redis_instance.set(ip_client, 'None')
-            redis_instance.expire(ip_client, settings.SESSION_TIME_LIMIT)
-            print('Иф сработал, запись в БД создана. Она будет удалена через:', settings.SESSION_TIME_LIMIT, 'секунд')
-            return redirect('home')
-        else:
-            print('Элс сработал, запись уже создана в БД!')
-            return redirect('home')
+        # if redis_instance.exists(ip_client) == 0:
+        #     redis_instance.set(ip_client, 'None')
+        #     redis_instance.expire(ip_client, settings.SESSION_TIME_LIMIT)
+        #     print('Иф сработал, запись в БД создана. Она будет удалена через:', settings.SESSION_TIME_LIMIT, 'секунд')
+        #     return redirect('home')
+        # else:
+        #     print('Элс сработал, запись уже создана в БД!')
+        #     return redirect('home')
 
 class HomePage(CreateView, ListView):
     form_class = NewShortURLForm
     model = ShortURLs
     template_name = 'from_long_to_short/index.html'
     context_object_name = 'all_shorts'
-    new = redis_instance.hgetall(get_ip())
     paginate_by = 3
 
     def get_context_data(self, **kwargs):
@@ -50,25 +45,59 @@ class HomePage(CreateView, ListView):
         context['menu'] = menu
         return context
 
+    def get_queryset(self):
+        ip_client = get_ip(self.request)
+        return ShortURLs.objects.filter(user__user_ip=ip_client)
+
     def form_valid(self, form):
         full_url = form.cleaned_data['full_url']
         subpart = form.cleaned_data['subpart']
+        ip_client = get_ip(self.request)
 
         if len(subpart) == 0:
             subpart = ''.join(random.choices(settings.SYMBOLS, k=settings.LEN_SHORTS))
-            ShortURLs.objects.create(full_url=full_url, subpart=subpart, short_url='http://127.0.0.1:8000/' + subpart + '/')
+            short_url = 'http://127.0.0.1:8000/' + subpart + '/'
+            if Users.objects.filter(user_ip=ip_client).exists():
+                ShortURLs.objects.create(full_url=full_url,
+                                         subpart=subpart,
+                                         short_url=short_url,
+                                         user=Users.objects.get(user_ip=ip_client))
+                redis_instance.expire(ip_client, settings.SESSION_TIME_LIMIT)
+            else:
+                Users.objects.create(user_ip=ip_client)
+                redis_instance.set(ip_client, 'None')
+                redis_instance.expire(ip_client, settings.SESSION_TIME_LIMIT)
+                ShortURLs.objects.create(full_url=full_url,
+                                         subpart=subpart,
+                                         short_url=short_url,
+                                         user=Users.objects.get(user_ip=ip_client))
         else:
-            ShortURLs.objects.create(full_url=full_url, subpart=subpart, short_url='http://127.0.0.1:8000/' + subpart + '/')
+            short_url = 'http://127.0.0.1:8000/' + subpart + '/'
+            if Users.objects.filter(user_ip=ip_client).exists():
+                ShortURLs.objects.create(full_url=full_url,
+                                         subpart=subpart,
+                                         short_url=short_url,
+                                         user=Users.objects.get(user_ip=ip_client))
+                redis_instance.expire(ip_client, settings.SESSION_TIME_LIMIT)
+            else:
+                Users.objects.create(user_ip=ip_client)
+                redis_instance.set(ip_client, 'None')
+                redis_instance.expire(ip_client, settings.SESSION_TIME_LIMIT)
+                ShortURLs.objects.create(full_url=full_url,
+                                         subpart=subpart,
+                                         short_url=short_url,
+                                         user=Users.objects.get(user_ip=ip_client))
 
-        ip_client = get_ip(self.request)
-        if redis_instance.type(ip_client) == b'string':
-            redis_instance.delete(ip_client)
-            redis_instance.hmset(ip_client, {subpart: full_url})
-            redis_instance.expire(ip_client, settings.SESSION_TIME_LIMIT)
-        else:
-            redis_instance.hmset(ip_client, {subpart: full_url})
-            redis_instance.expire(ip_client, settings.SESSION_TIME_LIMIT)
-        return redirect('about_me')
+        # if redis_instance.type(ip_client) == b'string':
+        #     short_url = 'http://127.0.0.1:8000/' + subpart + '/'
+        #     redis_instance.delete(ip_client)
+        #     redis_instance.hmset(ip_client, {short_url: full_url})
+        #     redis_instance.expire(ip_client, settings.SESSION_TIME_LIMIT)
+        # else:
+        #     short_url = 'http://127.0.0.1:8000/' + subpart + '/'
+        #     redis_instance.hmset(ip_client, {short_url: full_url})
+        #     redis_instance.expire(ip_client, settings.SESSION_TIME_LIMIT)
+        return redirect('home')
 
 def about_me(request):
     context = {'menu': menu, 'title': 'About me'}
