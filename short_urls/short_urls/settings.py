@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_results',
+    'django_celery_beat',
     'debug_toolbar',
     'captcha',
     'from_long_to_short.apps.FromLongToShortConfig',
@@ -146,20 +148,49 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_TIME_LIMIT = 60 #7 * 24 * 60 * 60 # срок хранения сессии: неделя
 CACHES = {
     'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        #'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        #'LOCATION': os.path.join(BASE_DIR, 'short_urls_cache'),
-        'LOCATION': 'localhost:6379',
-        'OPTIONS': {
-            'SESSIONS': 'django_redis.client.DefaultClient'
-        }
+        #'BACKEND': 'django_redis.cache.RedisCache',
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'short_urls_cache'),
+        #'LOCATION': 'localhost:6379',
+        #'OPTIONS': {
+        #     'SESSIONS': 'django_redis.client.DefaultClient'
+        # }
     }
 }
 
+# Redis
 REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
+REDIS_PORT = '6379'
 
+# Cache
 SESSION_CACHE_ALIAS = 'default'
 SESSION_FILE_PATH = os.path.join(BASE_DIR, 'short_urls_sessions')
 
+# Captcha
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+
+# Celery
+CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+# CELERY_CACHE_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+
+#CELERY_IMPORTS = ('short_urls.tasks.py',)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BEAT_SCHEDULE = {
+    'first_task': {
+        'task': 'short_urls.tasks.test',
+        'schedule': 5.0,
+    },
+    'second_task': {
+        'task': 'short_urls.tasks.test_2',
+        'schedule': 10.0,
+    },
+    'third_task': {
+        'task': 'short_urls.tasks.test_3',
+        'schedule': 15.0,
+    },
+}
