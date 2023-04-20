@@ -1,0 +1,25 @@
+Project in work.
+
+Simple test task in the past.
+I liked the idea, that's why I added a lot of functions inside.
+
+Stack:
+Django 4, MySQL, Redis, Celery, Docker.
+
+Something like bit.ly.
+User can write own subpart (short part) to make his URL shorter.
+This service not for personal account, that's why it use sessions for users.
+Home page is a form which make short links, also if user was before and made some links - it will be on the home page below.
+
+If user didn't active some time, all his links will be delete by Celery.
+
+Also I used captcha as a defence from bots.
+
+(For the future) The feedback page is a page, where somebody can write to me and it will come for my e-mail.
+
+Page about me just about me, not more:)
+
+I had axperiments with data caching, but right now I don't use it because I always add a new functions.
+At the end I would like to add cache and use docker for deploying my application for some host.
+
+Funny that I works on it a lot of time, but description takes a few strings.
