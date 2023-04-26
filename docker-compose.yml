@@ -51,18 +51,18 @@ services:
       - redis
     depends_on:
       - redis
-#
-#  flower:
-#    build:
-#      context: .
-#    hostname: flower
-#    entrypoint: celery
-#    command: -A short_urls flower
-#    volumes:
-#      - ./short_urls:/short_urls
-#    links:
-#      - redis
-#    depends_on:
-#      - redis
-#    ports:
-#      - '5555:5555'
+
+  flower:
+    build:
+      context: .
+    hostname: flower
+    entrypoint: celery
+    command: -A short_urls flower
+    volumes:
+      - ./short_urls:/short_urls
+    links:
+      - redis
+    depends_on:
+      - redis
+    ports:
+      - '5555:5555'
