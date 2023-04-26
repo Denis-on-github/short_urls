@@ -60,7 +60,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'short_urls.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -91,7 +90,6 @@ DATABASES = {
 #     }
 # }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -109,7 +107,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -137,10 +134,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Settings for random short for full URL
 SYMBOLS = 'abcdefghijklmnopqrstuvwxyz0123456789' # using symbols
 LEN_SHORTS = 5 # len for subpart
-
-INTERNAL_IPS = [
-    '127.0.0.1',
-]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_TIME_LIMIT = 60 #7 * 24 * 60 * 60 # срок хранения сессии: неделя
@@ -170,3 +163,7 @@ CELERY_BROKER_URL = 'redis://redis:6379/0'
 
 # Captcha settings
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+INTERNAL_IPS = [
+    '127.0.0.1',
+    '172.20.0.6'
+]

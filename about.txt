@@ -4,7 +4,7 @@ Simple test task in the past.
 I liked the idea, that's why I added a lot of functions inside.
 
 Stack:
-Django 4, MySQL, Redis, Celery, Docker.
+Django 4, MySQL, Redis, Celery, Flower, Docker, Django Debug Toolbar, Captcha.
 
 Something like bit.ly.
 User can write own subpart (short part) to make his URL shorter.

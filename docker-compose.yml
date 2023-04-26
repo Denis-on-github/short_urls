@@ -15,6 +15,7 @@ services:
       - DB_USER=admin
       - DB_PASSWORD=admin
       - REDIS_HOST=redis
+      - DJANGO_DEBUG=True
     command: >
       sh -c 'python manage.py makemigrations &&
       python manage.py migrate &&
@@ -55,6 +56,7 @@ services:
   flower:
     build:
       context: .
+    container_name: 'flower'
     hostname: flower
     entrypoint: celery
     command: -A short_urls flower
