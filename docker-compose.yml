@@ -1,0 +1,68 @@
+version: '3'
+
+services:
+  short_urls:
+    build:
+      context: .
+    ports:
+      - '8000:8000'
+    container_name: 'short_urls'
+    volumes:
+      - ./short_urls:/short_urls
+    environment:
+      - DB_HOST=postgresql
+      - DB_NAME=urls
+      - DB_USER=admin
+      - DB_PASSWORD=admin
+      - REDIS_HOST=redis
+    command: >
+      sh -c 'python manage.py makemigrations &&
+      python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8000'
+    depends_on:
+      - redis
+      - postgresql
+
+  postgresql:
+    image: postgres
+    container_name: 'postgresql'
+    environment:
+      - POSTGRES_DB=urls
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    depends_on:
+      - redis
+
+  redis:
+    image: redis
+    container_name: 'redis'
+    hostname: redis
+
+  celery:
+    build:
+      context: .
+    container_name: 'celery'
+    hostname: celery
+    entrypoint: celery
+    command: -A short_urls worker -l info
+    volumes:
+      - ./short_urls:/short_urls
+    links:
+      - redis
+    depends_on:
+      - redis
+#
+#  flower:
+#    build:
+#      context: .
+#    hostname: flower
+#    entrypoint: celery
+#    command: -A short_urls flower
+#    volumes:
+#      - ./short_urls:/short_urls
+#    links:
+#      - redis
+#    depends_on:
+#      - redis
+#    ports:
+#      - '5555:5555'

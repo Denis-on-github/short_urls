@@ -1,4 +1,4 @@
-Project in work.
+Project in progress.
 
 Simple test task in the past.
 I liked the idea, that's why I added a lot of functions inside.

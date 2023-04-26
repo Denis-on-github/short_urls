@@ -10,7 +10,7 @@ SECRET_KEY = 'django-insecure-h8ub=h8e)qatejt3-sr6c$m*p^irzm2$#9py$57^7+4l!_6)4b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -22,11 +22,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_celery_results',
-    'django_celery_beat',
     'debug_toolbar',
     'captcha',
     'from_long_to_short.apps.FromLongToShortConfig',
+    'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -64,19 +64,32 @@ WSGI_APPLICATION = 'short_urls.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# PostgreSQL
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'urls',
-        'USER': 'admin',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-        }
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.environ.get('DB_HOST'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'PORT': '5432',
     }
 }
+
+# MySQL
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'urls',
+#         'USER': 'admin',
+#         'PASSWORD': '1234',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+#         }
+#     }
+# }
 
 
 # Password validation
@@ -109,7 +122,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
@@ -122,7 +134,7 @@ STATICFILES_DIRS = []
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Settings for fandom short for full URL
+# Settings for random short for full URL
 SYMBOLS = 'abcdefghijklmnopqrstuvwxyz0123456789' # using symbols
 LEN_SHORTS = 5 # len for subpart
 
@@ -134,13 +146,13 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_TIME_LIMIT = 60 #7 * 24 * 60 * 60 # срок хранения сессии: неделя
 
 # Redis settings
-REDIS_HOST = '127.0.0.1'
+REDIS_HOST = os.environ.get('REDIS_HOST')
 REDIS_PORT = '6379'
 
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/1',
+        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/1',
         #'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
         #'LOCATION': os.path.join(BASE_DIR, 'short_urls_cache'),
         #'OPTIONS': {
@@ -153,32 +165,8 @@ CACHES = {
 # SESSION_CACHE_ALIAS = 'default'
 # SESSION_FILE_PATH = os.path.join(BASE_DIR, 'short_urls_sessions')
 
+# Celery
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+
 # Captcha settings
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
-
-# Celery settings
-CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-CELERY_RESULT_BACKEND = 'django-db'
-# CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-CELERY_CACHE_BACKEND = 'default'
-#
-# #CELERY_IMPORTS = ('short_urls.tasks.py',)
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-#
-# CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
-# CELERY_BEAT_SCHEDULE = {
-#     'first_task': {
-#         'task': 'short_urls.tasks.test',
-#         'schedule': 5.0,
-#     },
-#     'second_task': {
-#         'task': 'short_urls.tasks.test_2',
-#         'schedule': 10.0,
-#     },
-#     'third_task': {
-#         'task': 'short_urls.tasks.test_3',
-#         'schedule': 15.0,
-#     },
-# }
