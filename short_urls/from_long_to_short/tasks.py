@@ -7,7 +7,6 @@ from short_urls.celery import app
 @shared_task
 '''По факту эта таска не работает, все наши переменные пустые,
 потому что изначальный запрос неправильный'''
-
 def check_user_activities():
     query_set = Users.objects.filter(user_ip__in=redis_instance.keys())
     print('ВСЕ КЛЮЧИ РЕДИС', redis_instance.keys())
