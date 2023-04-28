@@ -15,7 +15,6 @@ services:
       - DB_USER=admin
       - DB_PASSWORD=admin
       - REDIS_HOST=redis
-      - DJANGO_DEBUG=True
     command: >
       sh -c 'python manage.py makemigrations &&
       python manage.py migrate &&
@@ -34,6 +33,18 @@ services:
     depends_on:
       - redis
 
+#  psqladmin:
+#    image: dpage/pgadmin4
+#    container_name: 'psqladmin'
+#    environment:
+#      - PGADMIN_DEFAULT_EMAIL=3330663@internet.ru
+#      - PGADMIN_DEFAULT_PASSWORD=admin
+#      - PGADMIN_CONFIG_SERVER_MODE=False
+#    ports:
+#      - '5050:5050'
+#    depends_on:
+#      - postgresql
+
   redis:
     image: redis
     container_name: 'redis'
@@ -45,13 +56,21 @@ services:
     container_name: 'celery'
     hostname: celery
     entrypoint: celery
-    command: -A short_urls worker -l info
+    command: >
+      -A short_urls worker -B -l info
     volumes:
       - ./short_urls:/short_urls
+    environment:
+      - DB_HOST=postgresql
+      - DB_NAME=urls
+      - DB_USER=admin
+      - DB_PASSWORD=admin
+      - REDIS_HOST=redis
     links:
       - redis
     depends_on:
       - redis
+      - postgresql
 
   flower:
     build:
