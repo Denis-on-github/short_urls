@@ -2,8 +2,8 @@ from django.contrib import admin
 from .models import *
 
 class ShortURLsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'url', 'short_url', 'created_date')
-    search_fields = ('full_url',)
+    list_display = ('id', 'url', 'short_url', 'user', 'created_date')
+    search_fields = ('full_url', 'user',)
 
 class UsersAdmin(admin.ModelAdmin):
     list_display = ('user_ip',)

@@ -136,7 +136,8 @@ SYMBOLS = 'abcdefghijklmnopqrstuvwxyz0123456789' # using symbols
 LEN_SHORTS = 5 # len for subpart
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_TIME_LIMIT = 60 #7 * 24 * 60 * 60 # срок хранения сессии: неделя
+SESSION_TIME_LIMIT = 7 * 24 * 60 * 60 # sission time in seconds is: one week
+SCHEDULE_CHECK_USERS = 12 * 60 * 60 # schedule for checking active users: one time in 12 hours
 
 # Redis settings
 REDIS_HOST = os.environ.get('REDIS_HOST')
