@@ -6,6 +6,7 @@ from .models import *
 from .forms import *
 import redis
 import random
+from django.core.mail import send_mail
 
 
 redis_instance = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0)
@@ -21,15 +22,6 @@ def get_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
-
-        # if redis_instance.exists(ip_client) == 0:
-        #     redis_instance.set(ip_client, 'None')
-        #     redis_instance.expire(ip_client, settings.SESSION_TIME_LIMIT)
-        #     print('Иф сработал, запись в БД создана. Она будет удалена через:', settings.SESSION_TIME_LIMIT, 'секунд')
-        #     return redirect('home')
-        # else:
-        #     print('Элс сработал, запись уже создана в БД!')
-        #     return redirect('home')
 
 class HomePage(CreateView, ListView):
     form_class = NewShortURLForm
@@ -87,16 +79,6 @@ class HomePage(CreateView, ListView):
                                          subpart=subpart,
                                          short_url=short_url,
                                          user=Users.objects.get(user_ip=ip_client))
-
-        # if redis_instance.type(ip_client) == b'string':
-        #     short_url = 'http://127.0.0.1:8000/' + subpart + '/'
-        #     redis_instance.delete(ip_client)
-        #     redis_instance.hmset(ip_client, {short_url: full_url})
-        #     redis_instance.expire(ip_client, settings.SESSION_TIME_LIMIT)
-        # else:
-        #     short_url = 'http://127.0.0.1:8000/' + subpart + '/'
-        #     redis_instance.hmset(ip_client, {short_url: full_url})
-        #     redis_instance.expire(ip_client, settings.SESSION_TIME_LIMIT)
         return redirect('home')
 
 def about_me(request):
@@ -115,6 +97,16 @@ class Feedback(FormView):
         return context
 
     def form_valid(self, form):
+        from .tasks import receive_feedback, send_confirm
+
+        name = form.cleaned_data['name']
+        email = form.cleaned_data['email']
+        comment = form.cleaned_data['comment']
+        message = f'Dear {name}!\nThank you for your feedback! It is very important for me!\n\nWith best regards, Denis.'
+        receive_feedback.delay(f'Feedback from {name}',
+                            f'From: {name}\nHis e-mail: {email}\n\nHis feedback:\n\n{comment}')
+        send_confirm.delay(message,
+                           [email])
         return redirect('home')
 
 # def feedback(request):

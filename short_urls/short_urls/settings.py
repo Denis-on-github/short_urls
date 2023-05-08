@@ -12,7 +12,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -142,7 +141,6 @@ SCHEDULE_CHECK_USERS = 12 * 60 * 60 # schedule for checking active users: one ti
 # Redis settings
 REDIS_HOST = os.environ.get('REDIS_HOST')
 REDIS_PORT = '6379'
-
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
@@ -170,3 +168,15 @@ INTERNAL_IPS = [
     '127.0.0.1',
     '172.20.0.6'
 ]
+
+# E-mail
+from django.core.mail import send_mail
+from django.conf import settings
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'short_urls@mail.ru'
+EMAIL_HOST_PASSWORD = 'wwSJ4iGEJ4FdaYat0XpJ'
+DEFAULT_FROM_EMAIL = 'short_urls@mail.ru'

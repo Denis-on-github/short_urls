@@ -1,7 +1,8 @@
 from celery import shared_task
-from from_long_to_short.models import *
+from from_long_to_short.models import ShortURLs, Users
 from from_long_to_short.views import redis_instance
 from short_urls.celery import app
+from django.core.mail import send_mail
 
 @shared_task
 def check_user_activities():
@@ -17,6 +18,10 @@ def check_user_activities():
             print(f'This {user} is unactive for a long time, it was delete from DB.')
             Users.objects.get(user_ip=user).delete()
 
-@app.task
-def test_task():
-    print('test_task is working!')
+@shared_task
+def receive_feedback(subject, message):
+    send_mail(subject, message, from_email=None, recipient_list=['write.to.denis.today@gmail.com'], fail_silently=False)
+
+@shared_task
+def send_confirm(message, recipient_list):
+    send_mail('Thank you for your feedback!', message, from_email=None, recipient_list=recipient_list, fail_silently=False)
