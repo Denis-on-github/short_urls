@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -13,7 +14,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -135,7 +135,7 @@ SYMBOLS = 'abcdefghijklmnopqrstuvwxyz0123456789' # using symbols
 LEN_SHORTS = 5 # len for subpart
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_TIME_LIMIT = 7 * 24 * 60 * 60 # sission time in seconds is: one week
+SESSION_TIME_LIMIT = 7 * 24 * 60 * 60 # session time in seconds is: one week
 SCHEDULE_CHECK_USERS = 12 * 60 * 60 # schedule for checking active users: one time in 12 hours
 
 # Redis settings
@@ -144,7 +144,7 @@ REDIS_PORT = '6379'
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/1',
+        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/2',
         #'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
         #'LOCATION': os.path.join(BASE_DIR, 'short_urls_cache'),
         #'OPTIONS': {
@@ -153,12 +153,8 @@ CACHES = {
     }
 }
 
-# Cache settings
-# SESSION_CACHE_ALIAS = 'default'
-# SESSION_FILE_PATH = os.path.join(BASE_DIR, 'short_urls_sessions')
-
 # Celery
-CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_BROKER_URL = 'redis://redis:6379/1'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
@@ -166,13 +162,14 @@ CELERY_TASK_SERIALIZER = 'json'
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
 INTERNAL_IPS = [
     '127.0.0.1',
-    '172.20.0.6'
+    '0.0.0.1'
 ]
 
-# E-mail
-from django.core.mail import send_mail
-from django.conf import settings
+import socket
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
 
+# E-mail
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.mail.ru'
 EMAIL_PORT = 465

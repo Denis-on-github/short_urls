@@ -1,7 +1,7 @@
 import os
-import time
 from celery import Celery
 from short_urls.settings import SCHEDULE_CHECK_USERS
+
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'short_urls.settings')
 

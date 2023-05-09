@@ -2,11 +2,9 @@ from django.http import HttpResponseNotFound, HttpRequest
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, FormView
-from .models import *
 from .forms import *
 import redis
 import random
-from django.core.mail import send_mail
 
 
 redis_instance = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0)

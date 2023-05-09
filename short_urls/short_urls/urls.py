@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from from_long_to_short.views import *
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('captcha/', include('captcha.urls')),

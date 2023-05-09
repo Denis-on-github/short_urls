@@ -1,8 +1,8 @@
 from celery import shared_task
-from from_long_to_short.models import ShortURLs, Users
+from from_long_to_short.models import Users
 from from_long_to_short.views import redis_instance
-from short_urls.celery import app
 from django.core.mail import send_mail
+
 
 @shared_task
 def check_user_activities():

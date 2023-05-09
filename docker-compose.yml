@@ -33,17 +33,16 @@ services:
     depends_on:
       - redis
 
-#  psqladmin:
-#    image: dpage/pgadmin4
-#    container_name: 'psqladmin'
-#    environment:
-#      - PGADMIN_DEFAULT_EMAIL=3330663@internet.ru
-#      - PGADMIN_DEFAULT_PASSWORD=admin
-#      - PGADMIN_CONFIG_SERVER_MODE=False
-#    ports:
-#      - '5050:5050'
-#    depends_on:
-#      - postgresql
+  psqladmin:
+    image: dpage/pgadmin4
+    container_name: 'psqladmin'
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=3330663@internet.ru
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - '80:80'
+    depends_on:
+      - postgresql
 
   redis:
     image: redis

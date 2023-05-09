@@ -20,4 +20,3 @@ The feedback page is a page, where somebody can write to me and it will come for
 Page about me just about me, not more:)
 
 I had axperiments with data caching, but right now I don't use it because I always add a new functions.
-At the end I would like to add cache and use docker for deploying my application for some host.

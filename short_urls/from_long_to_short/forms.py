@@ -1,9 +1,8 @@
 from django import forms
 from captcha.fields import CaptchaField
 from django.core.exceptions import ValidationError
-from django.shortcuts import redirect
-
 from .models import *
+
 
 class NewShortURLForm(forms.ModelForm):
     if settings.DEBUG is False:
@@ -38,6 +37,6 @@ class NewFeedbackForm(forms.Form):
 
     name = forms.CharField(max_length=50, label='Your name')
     email = forms.EmailField(label='Your e-mail')
-    comment = forms.CharField(max_length=50,
+    comment = forms.CharField(max_length=10000,
                               label='Your feedback',
                               widget=forms.Textarea(attrs={'cols': 60, 'rows': 10}))
